@@ -3,13 +3,14 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 import argparse
+from natsort import ns, natsorted
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Step 1 rotate scan page')
     
     parser.add_argument('--id',
                         help='To rotated page from student id folder',
-                        default="112598048",
+                        default="111C52032",
                         type=str)
 
     args = parser.parse_args()
@@ -110,6 +111,7 @@ def saveImage(image, now_page):
         now_page -- 頁面 index
     """
     global result_path
+    #print("now page is",now_page)
     cv2.imwrite('./{}/{}.png'.format(result_path, now_page), image)
     
 
@@ -145,10 +147,12 @@ def rotate_img(file_path, index) -> bool:
         now_page, bbox = qrcode_finder(left_top)
         IsRightBottom = False
     if bbox is None: return False
-    if now_page == '':
+    if now_page == 'https://tjhsieh.github.io/c/ct/ct2023s/syllabus/index.html':
         now_page = str(index + 1)
-        print(f'\nGet information from QR code failed, replace to "{now_page}.png", file path: {file_path}')
-        print(f'Warning: It may contained page error, please check it manually')
+        #print(f'\nGet information from QR code failed, replace to "{now_page}.png", file path: {file_path}')
+        #print(f'Warning: It may contained page error, please check it manually')
+    elif now_page == '':
+        now_page = str(index + 1)
     
     # Calculate qrcode angle
     box = boxSize(bbox[0])
@@ -188,8 +192,10 @@ if __name__ == '__main__':
     
     errorList = []
     allFileList = os.listdir(target_path)
+    allFileList = natsorted(allFileList, alg=ns.PATH)
     for index in tqdm(range(len(allFileList))):
         filePath = target_path + "/" + allFileList[index]
+        #print(filePath)
         if not rotate_img(filePath, index):
             errorList.append(allFileList[index])
             
