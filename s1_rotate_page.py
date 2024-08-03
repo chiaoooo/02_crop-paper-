@@ -1,9 +1,3 @@
-"""
-參考同學程式，旋轉稿紙角度
-
-by kyL
-"""
-
 import os
 import cv2
 import numpy as np
@@ -15,7 +9,7 @@ def parse_args():
     
     parser.add_argument('--id',
                         help='To rotated page from student id folder',
-                        default="111598002",
+                        default="112598048",
                         type=str)
 
     args = parser.parse_args()
